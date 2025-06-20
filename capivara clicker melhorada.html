@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capivara Clicker</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: purple;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 20px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .shop, .skins {
+      width: 200px;
+      background-color: rgba(255,255,255,0.1);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+    #capybara {
+      width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px black;
+      cursor: pointer;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 5px;
+      background-color: #8bc34a;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #7cb342;
+    }
+    .info {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Capivara Clicker</h1>
+  <div class="container">
+    <div class="skins">
+      <h3>Skins</h3>
+      <select id="skinSelect" onchange="changeSkin()">
+        <option value="normal">Capivara Padrão (Grátis)</option>
+        <option value="ninja">Capivara Ninja (200)</option>
+        <option value="chapeu">Capivara Chapéu (500)</option>
+        <option value="espacial">Capivara Espacial (800)</option>
+        <option value="pirata">Capivara Pirata (1200)</option>
+      </select>
+    </div>
+
+    <div class="center">
+      <img id="capybara" src="https://img.gamepix.com/games/capybara-clicker/cover/capybara-clicker.png?w=1200&ar=16:10" onclick="clickCapybara()">
+      <div class="info">
+        <p>Capivaras: <span id="counter">0</span></p>
+        <p>CPS: <span id="cps">0</span></p>
+      </div>
+    </div>
+
+    <div class="shop">
+      <h3>Upgrades</h3>
+      <div id="upgradeButtons"></div>
+    </div>
+  </div>
+
+  <script>
+    let capivaras = 0;
+    let clickPower = 1;
+    let cps = 0;
+    let ownedSkins = ["normal"];
+    let selectedSkin = "normal";
+
+    const skins = {
+      normal: "https://img.gamepix.com/games/capybara-clicker/cover/capybara-clicker.png?w=1200&ar=16:10",
+      ninja: "https://ik.imagekit.io/storybird/images/d03c139e-30e8-4653-825d-cfb7a0fb214c/0_376025717.webp?tr=q-80",
+      chapeu: "https://preview.redd.it/n8rakw5jpv881.jpg?width=640&crop=smart&auto=webp&s=5d1cbaaff0ea50e95e1010cce8bc0740b26686a4",
+      espacial: "https://i.pinimg.com/564x/10/0d/0f/100d0f5e6f8fc82a72c9a5286f66da10.jpg",
+      pirata: "https://i.pinimg.com/736x/94/07/f9/9407f90125306a23c41b090cf4ef75d4.jpg"
+    };
+
+    const skinPrices = {
+      ninja: 200,
+      chapeu: 500,
+      espacial: 800,
+      pirata: 1200
+    };
+
+    const upgrades = [
+      { text: "+1 por clique - 50 capivaras", cost: 50, action: () => clickPower += 1 },
+      { text: "+5 por clique - 150 capivaras", cost: 150, action: () => clickPower += 5 },
+      { text: "+10 por clique - 500 capivaras", cost: 500, action: () => clickPower += 10 },
+      { text: "+20 por clique - 1000 capivaras", cost: 1000, action: () => clickPower += 20 },
+      { text: "+1 CPS - 100 capivaras", cost: 100, action: () => cps += 1 },
+      { text: "+5 CPS - 300 capivaras", cost: 300, action: () => cps += 5 },
+      { text: "+10 CPS - 1000 capivaras", cost: 1000, action: () => cps += 10 },
+      { text: "+20 CPS - 2000 capivaras", cost: 2000, action: () => cps += 20 }
+    ];
+
+    function clickCapybara() {
+      capivaras += clickPower;
+      updateDisplay();
+      saveGame();
+    }
+
+    function updateDisplay() {
+      document.getElementById("counter").innerText = Math.floor(capivaras);
+      document.getElementById("cps").innerText = cps;
+    }
+
+    function changeSkin() {
+      const skin = document.getElementById("skinSelect").value;
+      if (!ownedSkins.includes(skin)) {
+        if (capivaras >= skinPrices[skin]) {
+          capivaras -= skinPrices[skin];
+          ownedSkins.push(skin);
+          selectedSkin = skin;
+        } else {
+          alert("Capivaras insuficientes!");
+          document.getElementById("skinSelect").value = selectedSkin;
+          return;
+        }
+      } else {
+        selectedSkin = skin;
+      }
+      document.getElementById("capybara").src = skins[selectedSkin];
+      updateDisplay();
+      saveGame();
+    }
+
+    function createUpgradeButtons() {
+      const container = document.getElementById("upgradeButtons");
+      upgrades.forEach((upgrade, index) => {
+        const button = document.createElement("button");
+        button.textContent = upgrade.text;
+        button.onclick = () => {
+          if (capivaras >= upgrade.cost) {
+            capivaras -= upgrade.cost;
+            upgrade.action();
+            updateDisplay();
+            saveGame();
+          } else {
+            alert("Capivaras insuficientes!");
+          }
+        };
+        container.appendChild(button);
+      });
+    }
+
+    function gameLoop() {
+      capivaras += cps / 10;
+      updateDisplay();
+      saveGame();
+    }
+
+    function saveGame() {
+      const saveData = {
+        capivaras,
+        clickPower,
+        cps,
+        ownedSkins,
+        selectedSkin
+      };
+      localStorage.setItem("capySave", JSON.stringify(saveData));
+    }
+
+    function loadGame() {
+      const saved = JSON.parse(localStorage.getItem("capySave"));
+      if (saved) {
+        capivaras = saved.capivaras || 0;
+        clickPower = saved.clickPower || 1;
+        cps = saved.cps || 0;
+        ownedSkins = saved.ownedSkins || ["normal"];
+        selectedSkin = saved.selectedSkin || "normal";
+        document.getElementById("skinSelect").value = selectedSkin;
+        document.getElementById("capybara").src = skins[selectedSkin];
+        updateDisplay();
+      }
+    }
+
+    createUpgradeButtons();
+    loadGame();
+    setInterval(gameLoop, 100);
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+    <head>
+        <title>Capivara pointin clicker</title>
+
+        <style>
+            body {
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+            img {
+                width: 300px;
+                cursor: pointer;
+            }
+            p {
+                font-size: 24px;
+            }
+        </style>
+
+        <h1>
+            clique na capivara para receber uma capivara pointin
+        </h1>
+    </head>
+
+    <body>
+        <img id="capybara" src="c:\Users\Cliente\Downloads\unnamed.png">
+
+        <p>Pointins: <span id="counter">0</span></p>
+
+        <script>
+            const counterElement = document.getElementById("counter");
+            const capybaraImage = document.getElementById("capybara");
+            let count = 0;
+
+            capybaraImage.addEventListener("click", function () {
+                count++;
+                counterElement.textContent = count;
+            });
+        </script>
+
+    </body>
+</html>
