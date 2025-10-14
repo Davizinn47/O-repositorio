@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tabuda</title>
+    <style>
+        body {
+    animation: fundoAnimado 10s infinite alternate;
+    background: linear-gradient(45deg, #000000, #19065b, #3806ee, #270799);
+    background-size: 600% 600%;
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+
+}
+
+
+li {
+    animation: aparecer 0.5s ease forwards;
+}
+
+@keyframes fundoAnimado {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+ul {
+    color: white;
+     border: 4px solid rgb(247, 247, 247);
+            padding: 10px;
+            margin: 20px;
+            text-align: center;
+            border-radius: 10px;
+            font-family: Arial;
+}
+
+h1 {
+    color: yellow;
+}
+
+p {
+    color: aliceblue;
+}
+
+.nome-com-borda {
+     border: 4px solid rgb(224, 224, 73);
+            padding: 10px;
+            margin: 20px;
+            text-align: center;
+            border-radius: 10px;
+            font-family: Arial;
+}
+
+button {
+    padding: 10px 20px;
+      background-color: rgb(78, 78, 78);
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 16px;
+}
+    </style>
+</head>
+<body>
+  <h1>Tabuada Dinâmica</h1>
+  <p>amarelo: par/vermelho: impar</p>
+<p>Digite um número e escolha até onde multiplicar</p>
+
+<input type="number" id="inputNumero" placeholder="Digite um número">
+<input type="number" id="inputLimite" placeholder="Multiplicar até quanto?">
+<button onclick="mostrartabuada()">Saiba a tabuada</button>
+
+<ul id="resultado"></ul>
+
+<script>
+function mostrartabuada() {
+    const numero = Number(document.getElementById("inputNumero").value);
+    let limite = Number(document.getElementById("inputLimite").value);
+    const lista = document.getElementById("resultado");
+    lista.innerHTML = "";
+    }
+
+    if (isNaN(numero) || isNaN(limite) || limite <= 0) {
+        alert("Digite um numero e um limite maior que zero.");
+        return;
+    }
+
+    for(let i = 1; i <= limite; i++) {
+        const resultado = numero * i;
+        const item = document.createElement("li");
+        item.textContent = `${numero} x ${i} = ${resultado}`;
+        item.style.color = resultado % 2 === 0 ? "yellow" : "red";
+        lista.appendChild(item);
+    }
+</script>
+    
+</body>
+</html>
